@@ -17,7 +17,7 @@ type CenterServer struct {
 	servers map[string]Server
 	players []*Player
 	//rooms   []*Room
-	mutex   sync.RWMutex
+	mutex sync.RWMutex
 }
 
 func NewCenterServer() *CenterServer {
@@ -44,10 +44,10 @@ func (server *CenterServer) removePlayer(params string) error {
 		if v.Name == params {
 			if len(server.players) == 1 {
 				server.players = make([]*Player, 0)
-				//} elseif i == len(server.players) - 1 {
-				//	server.players = server.players[:i - 1]
-				//} elseif i == 0 {
-				//	server.players = server.players[1:]
+			} else if i == len(server.players)-1 {
+				server.players = server.players[:i-1]
+			} else if i == 0 {
+				server.players = server.players[1:]
 			} else {
 				server.players = append(server.players[:i-1], server.players[:i +
 					1]...)
