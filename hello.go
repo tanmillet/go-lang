@@ -7,6 +7,8 @@ import (
 	"github.com/pkg/errors"
 	"os"
 	"io"
+	"time"
+	"sync"
 )
 
 func sum(values [] int, resultChan chan int) {
@@ -202,14 +204,75 @@ func (f *File) Colse() (err error) {
 	return nil
 }
 
+func Add3(x, y int) {
+	z := x + y
+	fmt.Println(z)
+}
+
+func Count(ch chan int) {
+	ch <- 1
+	fmt.Println("Counting")
+}
+
+type PipData struct {
+	value   int
+	handler func(int) int
+	next    chan int
+}
+
+func handle(queue chan *PipData) {
+	for data := range queue {
+		data.next <- data.handler(data.value)
+	}
+}
+
+var l sync.Mutex
+
+func foo() {
+	l.Lock()
+	defer l.Unlock()
+}
+
+var str string
+var once sync.Once
+
+func setup() {
+	str := "hello ,world"
+	fmt.Println(str)
+}
+
+func doprint()  {
+	once.Do(setup)
+	print(str)
+}
+
+func twoprint() {
+	go doprint()
+	go doprint()
+}
 
 
 func main() {
 
-	var v1 interface{} = 1
-	var v2 interface{} = "abc"
+	//chs := make([] chan int, 10)
+	//for i := 0; i < 10; i++ {
+	//	chs[i] = make(chan int)
+	//	go Count(chs[i])
+	//}
+	//
+	//for _, ch := range chs {
+	//	<-ch
+	//}
 
-	fmt.Println(v1, v2)
+	//for i := 0; i < 10; i++ {
+	//	go Add3(i, i)
+	//}
+	//
+	time.Sleep(time.Duration(5) * time.Second)
+	//var v1 interface{} = 1
+	//var v2 interface{} = "abc"
+	//
+	//fmt.Println(v1, v2)
 	//rect1 := new(Rect)
 	//rect2 := &Rect{}
 	//var a Integer = 1
