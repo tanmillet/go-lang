@@ -9,6 +9,7 @@ import (
 	"io"
 	"time"
 	"sync"
+	"net/http"
 )
 
 func sum(values [] int, resultChan chan int) {
@@ -253,7 +254,13 @@ func twoprint() {
 
 
 func main() {
+	resp, err := http.Get("http://www.baidu.com/")
+	if err != nil {
+		return
+	}
 
+	defer resp.Body.Close()
+	io.Copy(os.Stdout, resp.Body)
 	//chs := make([] chan int, 10)
 	//for i := 0; i < 10; i++ {
 	//	chs[i] = make(chan int)
